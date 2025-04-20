@@ -2,22 +2,18 @@
 
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { ListPlus, Check, Tags, Layers, MoveVertical, SortAsc, Shield, X, Info, Bug } from 'lucide-react'
+import { ListPlus, Check, Tags, Layers, MoveVertical, SortAsc, Shield, X, Info } from 'lucide-react'
 import { createRoom } from '../services/firebase'
-import logger from '../utils/logger'
-import LogViewer from './common/LogViewer'
-import Head from 'next/head'
+// import Head from 'next/head'
 import Footer from './todo/Footer'
 
-const COMPONENT_NAME = 'LandingPage';
+// const COMPONENT_NAME = 'LandingPage'; // Removed unused constant
 
 const LandingPage: React.FC = () => {
   const router = useRouter()
   const [showModal, setShowModal] = useState(false)
   const [customRoomName, setCustomRoomName] = useState('')
   const [validationError, setValidationError] = useState('')
-  const [showLogViewer, setShowLogViewer] = useState(false)
-  const [hasError, setHasError] = useState(false)
 
   const generateRandomString = (length: number): string => {
     const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -44,13 +40,12 @@ const LandingPage: React.FC = () => {
 
   const handleCreateRoom = async () => {
     try {
-      logger.info(COMPONENT_NAME, 'Attempting to create a room');
-      setHasError(false);
+      // logger.info(COMPONENT_NAME, 'Attempting to create a room');
       
       // If input is empty, generate a random room name
       if (!customRoomName.trim()) {
         const randomPath = generateRandomString(10);
-        logger.debug(COMPONENT_NAME, `Generated random room name: ${randomPath}`);
+        // logger.debug(COMPONENT_NAME, `Generated random room name: ${randomPath}`);
         
         await createRoom(randomPath);
         router.push(`/${randomPath}`);
@@ -61,7 +56,7 @@ const LandingPage: React.FC = () => {
       // If input is filled, validate it
       if (validateRoomName(customRoomName)) {
         const roomId = customRoomName.trim();
-        logger.debug(COMPONENT_NAME, `Using custom room name: ${roomId}`);
+        // logger.debug(COMPONENT_NAME, `Using custom room name: ${roomId}`);
         
         await createRoom(roomId);
         router.push(`/${roomId}`);
@@ -69,12 +64,11 @@ const LandingPage: React.FC = () => {
         setCustomRoomName('');
         setValidationError('');
       } else {
-        logger.warn(COMPONENT_NAME, `Invalid room name: ${customRoomName}`);
+        // logger.warn(COMPONENT_NAME, `Invalid room name: ${customRoomName}`);
         setValidationError('Room name can only contain letters, numbers, and dashes. No spaces or special characters allowed.');
       }
     } catch (error) {
-      logger.error(COMPONENT_NAME, 'Error creating room:', String(error));
-      setHasError(true);
+      console.error('Error creating room:', String(error));
       
       // Display detailed error for permission issues
       if (error instanceof Error && error.message.includes('permission')) {
@@ -82,9 +76,6 @@ const LandingPage: React.FC = () => {
       } else {
         setValidationError('Failed to create room. Please try again.');
       }
-      
-      // Show logs in console for debugging
-      console.error('All logs:', logger.getLogs());
     }
   }
 
@@ -96,7 +87,7 @@ const LandingPage: React.FC = () => {
 
   return (
     <>
-      <Head>
+      {/* <Head>
         <title>QuickTodos | Create Shareable Todo Lists in Seconds</title>
         <meta name="description" content="Create and share todo lists with your team instantly. No sign-up required. Organize tasks, set priorities, and collaborate in real-time with cloud storage." />
         <meta name="keywords" content="todo list, task management, team collaboration, shared tasks, no login, cloud storage, productivity" />
@@ -107,7 +98,7 @@ const LandingPage: React.FC = () => {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="QuickTodos | Simple Collaborative Todo Lists" />
         <meta name="twitter:description" content="Create shareable todo lists in seconds with cloud storage. No sign-up required." />
-      </Head>
+      </Head> */}
       
       <div className="min-h-screen flex flex-col">
         {/* Navigation */}
@@ -122,15 +113,6 @@ const LandingPage: React.FC = () => {
               <a href="#about" className="text-gray-600 hover:text-indigo-600">About</a>
             </div>
             <div className="flex items-center space-x-2">
-              {hasError && (
-                <button
-                  onClick={() => setShowLogViewer(true)}
-                  className="bg-red-100 text-red-700 p-2 rounded-full hover:bg-red-200"
-                  title="View logs"
-                >
-                  <Bug size={18} />
-                </button>
-              )}
               <button
                 onClick={openRoomModal}
                 className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition"
@@ -426,12 +408,6 @@ const LandingPage: React.FC = () => {
           </div>
         </div>
       )}
-
-      {/* Log Viewer */}
-      <LogViewer 
-        isOpen={showLogViewer} 
-        onClose={() => setShowLogViewer(false)} 
-      />
     </>
   )
 }

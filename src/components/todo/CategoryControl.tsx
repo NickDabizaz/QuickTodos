@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { X, Plus, Check } from 'lucide-react';
-import logger from '../../utils/logger';
+// import logger from '../../utils/logger';
 
 interface CategoryControlProps {
   categories: string[];
@@ -9,8 +9,6 @@ interface CategoryControlProps {
   onAddCategory: (category: string) => void;
   onDeleteCategory: (category: string) => void;
 }
-
-const COMPONENT_NAME = 'CategoryControl';
 
 /**
  * Unified component for managing and filtering by categories
@@ -26,7 +24,7 @@ const CategoryControl: React.FC<CategoryControlProps> = ({
   const [newCategory, setNewCategory] = useState('');
 
   const handleCategoryClick = (category: string | null) => {
-    logger.debug(COMPONENT_NAME, `Category ${category || 'All'} clicked for filtering`);
+    // logger.debug(`Category ${category || 'All'} clicked for filtering`);
     onCategoryFilterChange(category);
   };
 
@@ -44,12 +42,12 @@ const CategoryControl: React.FC<CategoryControlProps> = ({
     const trimmedCategory = newCategory.trim();
     
     if (trimmedCategory && !categories.includes(trimmedCategory)) {
-      logger.info(COMPONENT_NAME, `Adding new category: ${trimmedCategory}`);
+      // logger.info(`Adding new category: ${trimmedCategory}`);
       onAddCategory(trimmedCategory);
       setNewCategory('');
       setIsAdding(false);
     } else if (categories.includes(trimmedCategory)) {
-      logger.warn(COMPONENT_NAME, `Category already exists: ${trimmedCategory}`);
+      // logger.warn(`Category already exists: ${trimmedCategory}`);
       alert('This category already exists!');
     }
   };
@@ -58,11 +56,11 @@ const CategoryControl: React.FC<CategoryControlProps> = ({
     e.stopPropagation();
     
     if (category === 'Not Categorized') {
-      logger.warn(COMPONENT_NAME, 'Attempted to delete default category');
+      // logger.warn('Attempted to delete default category');
       return;
     }
     
-    logger.info(COMPONENT_NAME, `Deleting category: ${category}`);
+    // logger.info(`Deleting category: ${category}`);
     onDeleteCategory(category);
   };
 

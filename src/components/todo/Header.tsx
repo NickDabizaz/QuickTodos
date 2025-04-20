@@ -4,15 +4,13 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ChevronLeft, Link as LinkIcon, ListTodo } from 'lucide-react';
-import logger from '../../utils/logger';
+// import logger from '../../utils/logger';
 
 interface HeaderProps {
   listId: string;
   onShareClick: () => void;
   isLinkCopied: boolean;
 }
-
-const COMPONENT_NAME = 'TodoHeader';
 
 /**
  * Header component for the todo application
@@ -26,7 +24,7 @@ const Header: React.FC<HeaderProps> = ({
   const router = useRouter();
 
   const handleBackClick = () => {
-    logger.debug(COMPONENT_NAME, 'Back button clicked, navigating to home');
+    // logger.debug('Back button clicked, navigating to home');
     router.push('/');
   };
 

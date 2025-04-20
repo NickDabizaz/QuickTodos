@@ -1,8 +1,7 @@
 import React from 'react';
-import logger from '../../utils/logger';
+// import logger from '../../utils/logger';
 
 interface FilterControlsProps {
-  listId: string;
   categories: string[];
   categoryFilter: string | null;
   completionFilter: 'all' | 'active' | 'completed';
@@ -10,14 +9,11 @@ interface FilterControlsProps {
   onCompletionFilterChange: (status: 'all' | 'active' | 'completed') => void;
 }
 
-const COMPONENT_NAME = 'FilterControls';
-
 /**
  * Filter controls component for the todo application
  * Contains filters for completion status and categories
  */
 const FilterControls: React.FC<FilterControlsProps> = ({
-  listId,
   categories,
   categoryFilter,
   completionFilter,
@@ -26,12 +22,12 @@ const FilterControls: React.FC<FilterControlsProps> = ({
 }) => {
   
   const handleCompletionFilterChange = (status: 'all' | 'active' | 'completed') => {
-    logger.debug(COMPONENT_NAME, `Completion filter changed to: ${status}`);
+    // logger.debug(`Completion filter changed to: ${status}`);
     onCompletionFilterChange(status);
   };
   
   const handleCategoryFilterChange = (category: string | null) => {
-    logger.debug(COMPONENT_NAME, `Category filter changed to: ${category || 'all'}`);
+    // logger.debug(`Category filter changed to: ${category || 'all'}`);
     onCategoryFilterChange(category);
   };
 

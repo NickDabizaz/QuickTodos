@@ -6,15 +6,25 @@ import { Share, Copy, CheckCircle, X } from 'lucide-react';
 import TodoList from './TodoList';
 import Header from './todo/Header';
 import Footer from './todo/Footer';
+import { TodoProvider } from '../contexts/TodoContext';
 
-const RoomPageClient: React.FC = () => {
+interface RoomPageClientProps {
+  roomId?: string;
+}
+
+const RoomPageClient: React.FC<RoomPageClientProps> = ({ roomId: propRoomId }) => {
   const pathname = usePathname();
-  const roomId = pathname?.substring(1);
+  // Use prop roomId if provided, otherwise extract from pathname
+  const roomId = propRoomId || (pathname && pathname !== '/' ? pathname.substring(1) : null);
   const [showModal, setShowModal] = useState(false);
   const [isLinkCopied, setIsLinkCopied] = useState(false);
   
   const handleShareClick = () => {
-    const url = `${window.location.origin}${pathname}`;
+    // Use current URL or construct it with roomId
+    const url = propRoomId 
+      ? `${window.location.origin}/${roomId}`
+      : `${window.location.origin}${pathname}`;
+    
     navigator.clipboard.writeText(url);
     setIsLinkCopied(true);
     setShowModal(true);
@@ -36,7 +46,9 @@ const RoomPageClient: React.FC = () => {
       
       {/* Main Content */}
       <main className="flex-1 pb-16 pt-6">
-        <TodoList />
+        <TodoProvider roomId={roomId}>
+          <TodoList />
+        </TodoProvider>
       </main>
 
       {/* Footer */}

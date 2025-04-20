@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { Todo, TodoRoom } from '../types/todo';
+import { Todo } from '../types/todo';
 import { 
   getRoom, 
   addTodo as fbAddTodo, 
@@ -34,12 +34,16 @@ export const useTodos = () => useContext(TodoContext);
 
 interface TodoProviderProps {
   children: ReactNode;
+  roomId?: string | null;
 }
 
-export const TodoProvider: React.FC<TodoProviderProps> = ({ children }) => {
+export const TodoProvider: React.FC<TodoProviderProps> = ({ children, roomId: propRoomId }) => {
   const router = useRouter();
   const pathname = usePathname();
-  const roomId = pathname ? pathname.substring(1) : null;
+  
+  // Use prop roomId if provided, otherwise extract from pathname
+  const roomId = propRoomId !== undefined ? propRoomId : 
+                 (pathname ? (pathname === '/' ? null : pathname.substring(1)) : null);
   
   const [loading, setLoading] = useState<boolean>(true);
   const [todos, setTodos] = useState<Todo[]>([]);

@@ -12,9 +12,7 @@ import {
 } from 'firebase/firestore';
 import { Todo, TodoRoom } from '../types/todo';
 import { v4 as uuidv4 } from 'uuid';
-import logger from '../utils/logger';
-
-const COMPONENT_NAME = 'FirebaseService';
+// import logger from '../utils/logger';
 
 // Collection reference
 const roomsCollection = collection(db, 'rooms');
@@ -22,24 +20,26 @@ const roomsCollection = collection(db, 'rooms');
 // Create a new room
 export const createRoom = async (roomId: string): Promise<void> => {
   try {
-    logger.info(COMPONENT_NAME, `Creating new room with ID: ${roomId}`);
+    // logger.info(`Creating new room with ID: ${roomId}`);
     const roomRef = doc(roomsCollection, roomId);
     const roomSnapshot = await getDoc(roomRef);
     
     if (!roomSnapshot.exists()) {
-      logger.debug(COMPONENT_NAME, `Room doesn't exist, creating new one`);
+      // logger.debug(`Room doesn't exist, creating new one`);
       await setDoc(roomRef, {
         id: roomId,
         todos: [],
+        categories: ['Not Categorized', 'Coding', 'Design', 'Research', 'Marketing'],
         createdAt: serverTimestamp(),
         lastUpdated: serverTimestamp()
       });
-      logger.info(COMPONENT_NAME, `Room created successfully: ${roomId}`);
+      // logger.info(`Room created successfully: ${roomId}`);
     } else {
-      logger.info(COMPONENT_NAME, `Room already exists: ${roomId}`);
+      // logger.info(`Room already exists: ${roomId}`);
     }
   } catch (error) {
-    logger.error(COMPONENT_NAME, `Error creating room: ${roomId}`, String(error));
+    // logger.error(`Error creating room: ${roomId}`, String(error));
+    console.error(`Error creating room: ${roomId}`, String(error));
     throw error;
   }
 };
@@ -47,27 +47,28 @@ export const createRoom = async (roomId: string): Promise<void> => {
 // Get a room by ID
 export const getRoom = async (roomId: string): Promise<TodoRoom | null> => {
   try {
-    logger.info(COMPONENT_NAME, `Getting room with ID: ${roomId}`);
+    // logger.info(`Getting room with ID: ${roomId}`);
     const roomRef = doc(roomsCollection, roomId);
     const roomSnapshot = await getDoc(roomRef);
     
     if (!roomSnapshot.exists()) {
-      logger.warn(COMPONENT_NAME, `Room not found: ${roomId}`);
+      // logger.warn(`Room not found: ${roomId}`);
       return null;
     }
     
     const roomData = roomSnapshot.data();
-    logger.debug(COMPONENT_NAME, `Room data retrieved successfully`, roomData);
+    // logger.debug(`Room data retrieved successfully`, roomData);
     
     // Convert Firestore timestamps to JS Date objects
     return {
       id: roomData.id,
-      todos: roomData.todos.map((todo: any) => ({
+      todos: roomData.todos.map((todo: Todo) => ({
         ...todo,
         createdAt: todo.createdAt instanceof Timestamp 
           ? todo.createdAt.toDate() 
           : new Date(todo.createdAt)
       })),
+      categories: roomData.categories || ['Not Categorized', 'Coding', 'Design', 'Research', 'Marketing'],
       createdAt: roomData.createdAt instanceof Timestamp 
         ? roomData.createdAt.toDate() 
         : new Date(roomData.createdAt),
@@ -76,7 +77,8 @@ export const getRoom = async (roomId: string): Promise<TodoRoom | null> => {
         : new Date(roomData.lastUpdated)
     };
   } catch (error) {
-    logger.error(COMPONENT_NAME, `Error getting room: ${roomId}`, String(error));
+    // logger.error(`Error getting room: ${roomId}`, String(error));
+    console.error(`Error getting room: ${roomId}`, String(error));
     throw error;
   }
 };
@@ -84,7 +86,7 @@ export const getRoom = async (roomId: string): Promise<TodoRoom | null> => {
 // Add a todo to a room
 export const addTodo = async (roomId: string, todo: Omit<Todo, 'id' | 'createdAt'>): Promise<string> => {
   try {
-    logger.info(COMPONENT_NAME, `Adding todo to room: ${roomId}`, todo);
+    // logger.info(`Adding todo to room: ${roomId}`, todo);
     const roomRef = doc(roomsCollection, roomId);
     const todoId = uuidv4();
     
@@ -99,10 +101,11 @@ export const addTodo = async (roomId: string, todo: Omit<Todo, 'id' | 'createdAt
       lastUpdated: serverTimestamp()
     });
     
-    logger.info(COMPONENT_NAME, `Todo added successfully to room: ${roomId}, with ID: ${todoId}`);
+    // logger.info(`Todo added successfully to room: ${roomId}, with ID: ${todoId}`);
     return todoId;
   } catch (error) {
-    logger.error(COMPONENT_NAME, `Error adding todo to room: ${roomId}`, String(error));
+    // logger.error(`Error adding todo to room: ${roomId}`, String(error));
+    console.error(`Error adding todo to room: ${roomId}`, String(error));
     throw error;
   }
 };
@@ -110,12 +113,12 @@ export const addTodo = async (roomId: string, todo: Omit<Todo, 'id' | 'createdAt
 // Update a todo
 export const updateTodo = async (roomId: string, updatedTodo: Todo): Promise<void> => {
   try {
-    logger.info(COMPONENT_NAME, `Updating todo in room: ${roomId}`, updatedTodo);
+    // logger.info(`Updating todo in room: ${roomId}`, updatedTodo);
     const roomRef = doc(roomsCollection, roomId);
     const roomSnapshot = await getDoc(roomRef);
     
     if (!roomSnapshot.exists()) {
-      logger.warn(COMPONENT_NAME, `Room not found for updating todo: ${roomId}`);
+      // logger.warn(`Room not found for updating todo: ${roomId}`);
       return;
     }
     
@@ -125,7 +128,7 @@ export const updateTodo = async (roomId: string, updatedTodo: Todo): Promise<voi
     // Find and remove the old todo
     const oldTodoIndex = todos.findIndex((todo: Todo) => todo.id === updatedTodo.id);
     if (oldTodoIndex === -1) {
-      logger.warn(COMPONENT_NAME, `Todo not found for update: ${updatedTodo.id} in room: ${roomId}`);
+      // logger.warn(`Todo not found for update: ${updatedTodo.id} in room: ${roomId}`);
       return;
     }
     
@@ -141,9 +144,10 @@ export const updateTodo = async (roomId: string, updatedTodo: Todo): Promise<voi
       lastUpdated: serverTimestamp()
     });
     
-    logger.info(COMPONENT_NAME, `Todo updated successfully: ${updatedTodo.id} in room: ${roomId}`);
+    // logger.info(`Todo updated successfully: ${updatedTodo.id} in room: ${roomId}`);
   } catch (error) {
-    logger.error(COMPONENT_NAME, `Error updating todo: ${updatedTodo.id} in room: ${roomId}`, String(error));
+    // logger.error(`Error updating todo: ${updatedTodo.id} in room: ${roomId}`, String(error));
+    console.error(`Error updating todo: ${updatedTodo.id} in room: ${roomId}`, String(error));
     throw error;
   }
 };
@@ -151,12 +155,12 @@ export const updateTodo = async (roomId: string, updatedTodo: Todo): Promise<voi
 // Delete a todo
 export const deleteTodo = async (roomId: string, todoId: string): Promise<void> => {
   try {
-    logger.info(COMPONENT_NAME, `Deleting todo: ${todoId} from room: ${roomId}`);
+    // logger.info(`Deleting todo: ${todoId} from room: ${roomId}`);
     const roomRef = doc(roomsCollection, roomId);
     const roomSnapshot = await getDoc(roomRef);
     
     if (!roomSnapshot.exists()) {
-      logger.warn(COMPONENT_NAME, `Room not found for deleting todo: ${roomId}`);
+      // logger.warn(`Room not found for deleting todo: ${roomId}`);
       return;
     }
     
@@ -168,12 +172,13 @@ export const deleteTodo = async (roomId: string, todoId: string): Promise<void> 
         todos: arrayRemove(todoToDelete),
         lastUpdated: serverTimestamp()
       });
-      logger.info(COMPONENT_NAME, `Todo deleted successfully: ${todoId} from room: ${roomId}`);
+      // logger.info(`Todo deleted successfully: ${todoId} from room: ${roomId}`);
     } else {
-      logger.warn(COMPONENT_NAME, `Todo not found for deletion: ${todoId} in room: ${roomId}`);
+      // logger.warn(`Todo not found for deletion: ${todoId} in room: ${roomId}`);
     }
   } catch (error) {
-    logger.error(COMPONENT_NAME, `Error deleting todo: ${todoId} from room: ${roomId}`, String(error));
+    // logger.error(`Error deleting todo: ${todoId} from room: ${roomId}`, String(error));
+    console.error(`Error deleting todo: ${todoId} from room: ${roomId}`, String(error));
     throw error;
   }
 }; 

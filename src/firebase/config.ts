@@ -4,9 +4,7 @@
 import { initializeApp, FirebaseApp } from "firebase/app";
 import { getFirestore, Firestore } from "firebase/firestore";
 import { getAnalytics, isSupported, Analytics } from "firebase/analytics";
-import logger from "../utils/logger";
-
-const COMPONENT_NAME = 'FirebaseConfig';
+// import logger from "../utils/logger";
 
 // Your web app's Firebase configuration using environment variables
 const firebaseConfig = {
@@ -25,11 +23,12 @@ let db: Firestore;
 let analytics: Analytics | null = null;
 
 try {
-  logger.debug(COMPONENT_NAME, "Initializing Firebase");
+  // logger.debug("Initializing Firebase");
   
   // Check if environment variables are loaded
   if (!process.env.NEXT_PUBLIC_FIREBASE_API_KEY) {
-    logger.warn(COMPONENT_NAME, "Firebase env variables not found. Make sure .env.local is set up correctly");
+    // logger.warn("Firebase env variables not found. Make sure .env.local is set up correctly");
+    console.warn("Firebase env variables not found. Make sure .env.local is set up correctly");
   }
   
   app = initializeApp(firebaseConfig);
@@ -42,19 +41,21 @@ try {
       try {
         if (await isSupported()) {
           analytics = getAnalytics(app);
-          logger.debug(COMPONENT_NAME, "Firebase Analytics initialized");
+          // logger.debug("Firebase Analytics initialized");
         }
       } catch (error) {
-        logger.warn(COMPONENT_NAME, "Firebase Analytics not supported", String(error));
+        // logger.warn("Firebase Analytics not supported", String(error));
+        console.warn("Firebase Analytics not supported", String(error));
       }
     };
     
     initAnalytics();
   }
   
-  logger.info(COMPONENT_NAME, "Firebase initialized successfully");
+  // logger.info("Firebase initialized successfully");
 } catch (error) {
-  logger.error(COMPONENT_NAME, "Error initializing Firebase", String(error));
+  // logger.error("Error initializing Firebase", String(error));
+  console.error("Error initializing Firebase", String(error));
 }
 
 export { app, db, analytics }; 

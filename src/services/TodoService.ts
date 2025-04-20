@@ -1,19 +1,16 @@
-import logger from '../utils/logger';
 import { Todo } from './StorageService';
-
-const COMPONENT_NAME = 'TodoService';
 
 /**
  * Sort todos based on the specified sorting criteria
  */
 export const sortTodos = (todos: Todo[], sortType: string): Todo[] => {
-  logger.debug(COMPONENT_NAME, `Sorting todos by: ${sortType}`);
+  // logger.debug(`Sorting todos by: ${sortType}`);
   
   const sortedTodos = [...todos];
   
   switch (sortType) {
     case 'name':
-      logger.debug(COMPONENT_NAME, 'Applying name sort');
+      // logger.debug('Applying name sort');
       return sortedTodos.sort((a, b) => {
         // Primary sort by name
         const nameResult = a.text.localeCompare(b.text);
@@ -32,7 +29,7 @@ export const sortTodos = (todos: Todo[], sortType: string): Todo[] => {
       });
       
     case 'priority': {
-      logger.debug(COMPONENT_NAME, 'Applying priority sort');
+      // logger.debug('Applying priority sort');
       const priorityOrder: {[key: string]: number} = { 
         'Urgent': 0, 
         'Normal': 1, 
@@ -58,7 +55,7 @@ export const sortTodos = (todos: Todo[], sortType: string): Todo[] => {
     }
     
     case 'category':
-      logger.debug(COMPONENT_NAME, 'Applying category sort');
+      // logger.debug('Applying category sort');
       return sortedTodos.sort((a, b) => {
         // Primary sort by category
         const categoryResult = a.category.localeCompare(b.category);
@@ -84,7 +81,7 @@ export const sortTodos = (todos: Todo[], sortType: string): Todo[] => {
       });
       
     case 'completed':
-      logger.debug(COMPONENT_NAME, 'Applying completed status sort');
+      // logger.debug('Applying completed status sort');
       return sortedTodos.sort((a, b) => {
         // Primary sort by completion status
         if (a.completed !== b.completed) return a.completed ? 1 : -1;
@@ -111,7 +108,7 @@ export const sortTodos = (todos: Todo[], sortType: string): Todo[] => {
       
     case 'position':
     default:
-      logger.debug(COMPONENT_NAME, 'Applying position sort (default)');
+      // logger.debug('Applying position sort (default)');
       return sortedTodos.sort((a, b) => a.position - b.position);
   }
 };
@@ -124,10 +121,9 @@ export const filterTodos = (
   categoryFilter: string | null, 
   completionFilter: 'all' | 'active' | 'completed'
 ): Todo[] => {
-  logger.debug(
-    COMPONENT_NAME, 
-    `Filtering todos with categoryFilter: ${categoryFilter || 'none'}, completionFilter: ${completionFilter}`
-  );
+  // logger.debug(
+  //   `Filtering todos with categoryFilter: ${categoryFilter || 'none'}, completionFilter: ${completionFilter}`
+  // );
   
   return todos.filter(todo => {
     // Apply category filter
@@ -152,10 +148,9 @@ export const getFilteredAndSortedTodos = (
   completionFilter: 'all' | 'active' | 'completed',
   sortBy: string
 ): Todo[] => {
-  logger.debug(
-    COMPONENT_NAME, 
-    `Processing todos with filters and sorting: category=${categoryFilter || 'all'}, completion=${completionFilter}, sortBy=${sortBy}`
-  );
+  // logger.debug(
+  //   `Processing todos with filters and sorting: category=${categoryFilter || 'all'}, completion=${completionFilter}, sortBy=${sortBy}`
+  // );
   
   // First filter
   const filtered = filterTodos(todos, categoryFilter, completionFilter);
@@ -163,7 +158,7 @@ export const getFilteredAndSortedTodos = (
   // Then sort
   const result = sortTodos(filtered, sortBy);
   
-  logger.debug(COMPONENT_NAME, `Filtered from ${todos.length} to ${filtered.length} todos, then sorted by ${sortBy}`);
+  // logger.debug(`Filtered from ${todos.length} to ${filtered.length} todos, then sorted by ${sortBy}`);
   return result;
 };
 
@@ -177,11 +172,11 @@ export const addTodo = (
   priority: 'Urgent' | 'Normal' | 'Low Priority'
 ): Todo[] => {
   if (!text.trim()) {
-    logger.warn(COMPONENT_NAME, 'Attempted to add todo with empty text');
+    // logger.warn('Attempted to add todo with empty text');
     return todos;
   }
   
-  logger.debug(COMPONENT_NAME, `Adding new todo with text: ${text}, category: ${category}, priority: ${priority}`);
+  // logger.debug(`Adding new todo with text: ${text}, category: ${category}, priority: ${priority}`);
   
   // Find the highest current position
   const maxPosition = todos.reduce((max, todo) => Math.max(max, todo.position), -1);
@@ -196,21 +191,21 @@ export const addTodo = (
   };
   
   const newTodos = [...todos, newTodo];
-  logger.info(COMPONENT_NAME, `Added new todo with id: ${newTodo.id}`);
+  // logger.info(`Added new todo with id: ${newTodo.id}`);
   return newTodos;
 };
 
 /**
- * Delete a todo
+ * Delete a todo by id
  */
 export const deleteTodo = (todos: Todo[], id: number): Todo[] => {
-  logger.debug(COMPONENT_NAME, `Deleting todo with id: ${id}`);
+  // logger.debug(`Deleting todo with id: ${id}`);
   const newTodos = todos.filter(t => t.id !== id);
   
   if (newTodos.length === todos.length) {
-    logger.warn(COMPONENT_NAME, `Todo with id: ${id} not found, nothing deleted`);
+    // logger.warn(`Todo with id: ${id} not found, nothing deleted`);
   } else {
-    logger.info(COMPONENT_NAME, `Deleted todo with id: ${id}`);
+    // logger.info(`Deleted todo with id: ${id}`);
   }
   
   return newTodos;
@@ -220,12 +215,12 @@ export const deleteTodo = (todos: Todo[], id: number): Todo[] => {
  * Toggle todo completion status
  */
 export const toggleTodoComplete = (todos: Todo[], id: number): Todo[] => {
-  logger.debug(COMPONENT_NAME, `Toggling completion status for todo with id: ${id}`);
+  // logger.debug(`Toggling completion status for todo with id: ${id}`);
   
   const newTodos = todos.map(todo => {
     if (todo.id === id) {
       const newStatus = !todo.completed;
-      logger.info(COMPONENT_NAME, `Todo ${id} completion status changed to: ${newStatus}`);
+      // logger.info(`Todo ${id} completion status changed to: ${newStatus}`);
       return { ...todo, completed: newStatus };
     }
     return todo;
@@ -251,17 +246,16 @@ export const updateTodoPositions = (
   destIndex: number,
   displayedTodos: Todo[]
 ): Todo[] => {
-  logger.info(
-    COMPONENT_NAME,
-    `Updating todo positions: todoId=${todoId}, sourceIndex=${sourceIndex}, destIndex=${destIndex}`
-  )
+  // logger.info(
+  //   `Updating todo positions: todoId=${todoId}, sourceIndex=${sourceIndex}, destIndex=${destIndex}`
+  // )
   
   // Check if we're dealing with a filtered or sorted view
   const isFiltered = todos.length !== displayedTodos.length
   
   // If no filtering or sorting, we can use a straightforward approach
   if (!isFiltered) {
-    logger.debug(COMPONENT_NAME, 'Using direct repositioning (no filters applied)')
+    // logger.debug('Using direct repositioning (no filters applied)')
     const newTodos = [...todos]
     const [draggedItem] = newTodos.splice(sourceIndex, 1)
     newTodos.splice(destIndex, 0, draggedItem)
@@ -274,7 +268,7 @@ export const updateTodoPositions = (
   }
   
   // For filtered lists, we need to find the actual indices in the main todos array
-  logger.debug(COMPONENT_NAME, 'Using complex repositioning (filters applied)')
+  // logger.debug('Using complex repositioning (filters applied)')
   
   // Create a map of id to position in the todos array for efficient lookup
   const idToPositionMap = new Map<number, number>()
@@ -287,14 +281,13 @@ export const updateTodoPositions = (
   const actualDestIndex = idToPositionMap.get(displayedTodos[destIndex].id)
   
   if (actualSourceIndex === undefined || actualDestIndex === undefined) {
-    logger.error(COMPONENT_NAME, `Failed to find todo in position map: source=${sourceIndex}, dest=${destIndex}`)
+    // logger.error(`Failed to find todo in position map: source=${sourceIndex}, dest=${destIndex}`)
     return todos // Return original array if we can't find the indices
   }
   
-  logger.debug(
-    COMPONENT_NAME, 
-    `Mapped display indices to actual indices: source=${sourceIndex}->${actualSourceIndex}, dest=${destIndex}->${actualDestIndex}`
-  )
+  // logger.debug(
+  //   `Mapped display indices to actual indices: source=${sourceIndex}->${actualSourceIndex}, dest=${destIndex}->${actualDestIndex}`
+  // )
   
   // Create a new array and perform the move
   const newTodos = [...todos]
@@ -314,7 +307,7 @@ export const updateTodoPositions = (
   }))
 };
 
-export default {
+const TodoService = {
   sortTodos,
   filterTodos,
   getFilteredAndSortedTodos,
@@ -322,4 +315,6 @@ export default {
   deleteTodo,
   toggleTodoComplete,
   updateTodoPositions
-}; 
+};
+
+export default TodoService; 

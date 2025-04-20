@@ -1,12 +1,25 @@
+import React from 'react';
 import RoomPageClient from '../../components/RoomPageClient';
+import { Metadata } from 'next';
 
-// Fungsi ini diperlukan untuk static export dengan dynamic routes
+export const metadata: Metadata = {
+  title: 'QuickTodos Room',
+  description: 'Collaborative todo list room',
+};
+
+// This function is required for static export with dynamic routes
 export async function generateStaticParams() {
-  // Kita menghasilkan halaman kosong saja, karena roomId akan dibuat secara dinamis
-  return [];
+  // Generate a default empty list for the static build
+  // All other routes will be handled client-side
+  return [
+    { roomId: 'index' },
+    { roomId: 'demo' }
+  ];
 }
 
-export default function RoomPage() {
-  // Server component yang hanya merender client component
-  return <RoomPageClient />;
+// Make the component async to properly handle params
+export default async function RoomPage({ params }: { params: { roomId: string } }) {
+  // Since we're using the params in a simple way, we can just pass it along
+  // For more complex scenarios, you might need to fetch data based on the roomId
+  return <RoomPageClient roomId={params.roomId} />;
 } 

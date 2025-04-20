@@ -9,7 +9,7 @@ import { Plus, Loader2, AlertTriangle, SortAsc, SortDesc, ArrowDownAZ, ArrowUpAZ
 import CategoryControl from './todo/CategoryControl';
 
 const TodoList: React.FC = () => {
-  const { todos, loading, error, addTodo, updateTodo } = useTodos();
+  const { roomId, todos, loading, error, addTodo, updateTodo } = useTodos();
   const [newTodoText, setNewTodoText] = useState('');
   const [editingTodo, setEditingTodo] = useState<Todo | null>(null);
   const [selectedPriority, setSelectedPriority] = useState<TodoPriority>('normal');
@@ -20,21 +20,20 @@ const TodoList: React.FC = () => {
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [isSaving, setIsSaving] = useState(false);
 
-  // For drag and drop - konfigurasi ulang untuk respon lebih cepat
+  // For drag and drop
   const sensors = useSensors(
     useSensor(PointerSensor, {
-      // Konfigurasi agar lebih responsif
       activationConstraint: {
-        distance: 3, // Hanya perlu 3px pergerakan
-        delay: 50,   // Delay lebih cepat (50ms)
-        tolerance: 3, // Toleransi kecil
+        distance: 3,
+        delay: 50,
+        tolerance: 3,
       }
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
-
+  
   // Extract unique categories from todos
   useEffect(() => {
     const todoCategories = todos.map(todo => todo.category);
@@ -47,6 +46,18 @@ const TodoList: React.FC = () => {
     
     setCategories(uniqueCategories);
   }, [todos]);
+  
+  // Display appropriate message when no roomId is provided
+  if (!roomId) {
+    return (
+      <div className="container max-w-4xl mx-auto px-4 py-8">
+        <div className="bg-white rounded-lg shadow-md p-6 text-center">
+          <h2 className="text-xl font-semibold text-gray-700 mb-2">No Room Selected</h2>
+          <p className="text-gray-600">Please create or join a room to start managing your todos.</p>
+        </div>
+      </div>
+    );
+  }
 
   const handleAddTodo = async (e: React.FormEvent) => {
     e.preventDefault();

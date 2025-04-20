@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 import { X } from 'lucide-react';
-import logger from '../../utils/logger';
+// import logger from '../../utils/logger';
 
 interface CategoryManagerProps {
   categories: string[];
   onAddCategory: (category: string) => void;
   onDeleteCategory: (category: string) => void;
 }
-
-const COMPONENT_NAME = 'CategoryManager';
 
 /**
  * Category management component
@@ -27,12 +25,12 @@ const CategoryManager: React.FC<CategoryManagerProps> = ({
   };
 
   const handleAddCategoryClick = () => {
-    logger.debug(COMPONENT_NAME, 'Add category button clicked, showing input');
+    // logger.debug('Add category button clicked, showing input');
     setShowCategoryInput(true);
   };
 
   const handleCancelClick = () => {
-    logger.debug(COMPONENT_NAME, 'Category add cancelled');
+    // logger.debug('Category add cancelled');
     setShowCategoryInput(false);
     setNewCategory('');
   };
@@ -42,25 +40,25 @@ const CategoryManager: React.FC<CategoryManagerProps> = ({
     const trimmedCategory = newCategory.trim();
     
     if (trimmedCategory && !categories.includes(trimmedCategory)) {
-      logger.info(COMPONENT_NAME, `Adding new category: ${trimmedCategory}`);
+      // logger.info(`Adding new category: ${trimmedCategory}`);
       onAddCategory(trimmedCategory);
       setNewCategory('');
       setShowCategoryInput(false);
     } else if (categories.includes(trimmedCategory)) {
-      logger.warn(COMPONENT_NAME, `Category already exists: ${trimmedCategory}`);
+      // logger.warn(`Category already exists: ${trimmedCategory}`);
       alert('This category already exists!');
     } else {
-      logger.warn(COMPONENT_NAME, 'Attempted to add empty category');
+      // logger.warn('Attempted to add empty category');
     }
   };
 
   const handleDeleteCategory = (category: string) => {
     if (category === 'Not Categorized') {
-      logger.warn(COMPONENT_NAME, 'Attempted to delete default category');
+      // logger.warn('Attempted to delete default category');
       return;
     }
     
-    logger.info(COMPONENT_NAME, `Deleting category: ${category}`);
+    // logger.info(`Deleting category: ${category}`);
     onDeleteCategory(category);
   };
 

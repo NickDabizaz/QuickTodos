@@ -1,4 +1,4 @@
-import logger from '../utils/logger';
+// import logger from '../utils/logger';
 
 export interface Todo {
   id: number;
@@ -8,8 +8,6 @@ export interface Todo {
   priority: 'Urgent' | 'Normal' | 'Low Priority';
   position: number;
 }
-
-const COMPONENT_NAME = 'StorageService';
 
 /**
  * Generate a storage key based on the listId
@@ -24,18 +22,18 @@ const getStorageKey = (listId: string, type: 'todos' | 'categories'): string => 
  */
 export const loadTodos = (listId: string): Todo[] => {
   if (typeof window === 'undefined') {
-    logger.warn(COMPONENT_NAME, 'Attempted to load todos in a non-browser environment');
+    // logger.warn('Attempted to load todos in a non-browser environment');
     return [];
   }
 
   const storageKey = getStorageKey(listId, 'todos');
-  logger.debug(COMPONENT_NAME, `Loading todos from localStorage with key: ${storageKey}`);
+  // logger.debug(`Loading todos from localStorage with key: ${storageKey}`);
 
   try {
     const savedData = localStorage.getItem(storageKey);
     
     if (!savedData) {
-      logger.info(COMPONENT_NAME, `No todos found for list: ${listId}`);
+      // logger.info(`No todos found for list: ${listId}`);
       return [];
     }
 
@@ -54,10 +52,12 @@ export const loadTodos = (listId: string): Todo[] => {
       return migratedTodo;
     });
 
-    logger.info(COMPONENT_NAME, `Successfully loaded ${migratedTodos.length} todos for list: ${listId}`);
+    // logger.info(`Successfully loaded ${migratedTodos.length} todos for list: ${listId}`);
     return migratedTodos;
   } catch (error) {
-    logger.error(COMPONENT_NAME, `Failed to parse todos from localStorage for list: ${listId}`, String(error));
+    // logger.error(`Failed to parse todos from localStorage for list: ${listId}`, String(error));
+    // Fallback: Log error to console if logger is removed
+    console.error(`Failed to parse todos from localStorage for list: ${listId}`, String(error));
     return [];
   }
 };
@@ -67,19 +67,21 @@ export const loadTodos = (listId: string): Todo[] => {
  */
 export const saveTodos = (listId: string, todos: Todo[]): boolean => {
   if (typeof window === 'undefined') {
-    logger.warn(COMPONENT_NAME, 'Attempted to save todos in a non-browser environment');
+    // logger.warn('Attempted to save todos in a non-browser environment');
     return false;
   }
 
   const storageKey = getStorageKey(listId, 'todos');
-  logger.debug(COMPONENT_NAME, `Saving ${todos.length} todos to localStorage with key: ${storageKey}`);
+  // logger.debug(`Saving ${todos.length} todos to localStorage with key: ${storageKey}`);
 
   try {
     localStorage.setItem(storageKey, JSON.stringify(todos));
-    logger.info(COMPONENT_NAME, `Successfully saved ${todos.length} todos for list: ${listId}`);
+    // logger.info(`Successfully saved ${todos.length} todos for list: ${listId}`);
     return true;
   } catch (error) {
-    logger.error(COMPONENT_NAME, `Failed to save todos to localStorage for list: ${listId}`, String(error));
+    // logger.error(`Failed to save todos to localStorage for list: ${listId}`, String(error));
+    // Fallback: Log error to console if logger is removed
+    console.error(`Failed to save todos to localStorage for list: ${listId}`, String(error));
     return false;
   }
 };
@@ -89,32 +91,34 @@ export const saveTodos = (listId: string, todos: Todo[]): boolean => {
  */
 export const loadCategories = (listId: string): string[] => {
   if (typeof window === 'undefined') {
-    logger.warn(COMPONENT_NAME, 'Attempted to load categories in a non-browser environment');
+    // logger.warn('Attempted to load categories in a non-browser environment');
     return ['Not Categorized', 'Coding', 'Design', 'Research', 'Marketing'];
   }
 
   const storageKey = getStorageKey(listId, 'categories');
-  logger.debug(COMPONENT_NAME, `Loading categories from localStorage with key: ${storageKey}`);
+  // logger.debug(`Loading categories from localStorage with key: ${storageKey}`);
 
   try {
     const savedData = localStorage.getItem(storageKey);
     
     if (!savedData) {
-      logger.info(COMPONENT_NAME, `No categories found for list: ${listId}, using defaults`);
+      // logger.info(`No categories found for list: ${listId}, using defaults`);
       return ['Not Categorized', 'Coding', 'Design', 'Research', 'Marketing'];
     }
 
     const parsedData = JSON.parse(savedData);
     
     if (!Array.isArray(parsedData)) {
-      logger.warn(COMPONENT_NAME, `Invalid categories data for list: ${listId}, using defaults`);
+      // logger.warn(`Invalid categories data for list: ${listId}, using defaults`);
       return ['Not Categorized', 'Coding', 'Design', 'Research', 'Marketing'];
     }
 
-    logger.info(COMPONENT_NAME, `Successfully loaded ${parsedData.length} categories for list: ${listId}`);
+    // logger.info(`Successfully loaded ${parsedData.length} categories for list: ${listId}`);
     return parsedData;
   } catch (error) {
-    logger.error(COMPONENT_NAME, `Failed to parse categories from localStorage for list: ${listId}`, String(error));
+    // logger.error(`Failed to parse categories from localStorage for list: ${listId}`, String(error));
+    // Fallback: Log error to console if logger is removed
+    console.error(`Failed to parse categories from localStorage for list: ${listId}`, String(error));
     return ['Not Categorized', 'Coding', 'Design', 'Research', 'Marketing'];
   }
 };
@@ -124,26 +128,30 @@ export const loadCategories = (listId: string): string[] => {
  */
 export const saveCategories = (listId: string, categories: string[]): boolean => {
   if (typeof window === 'undefined') {
-    logger.warn(COMPONENT_NAME, 'Attempted to save categories in a non-browser environment');
+    // logger.warn('Attempted to save categories in a non-browser environment');
     return false;
   }
 
   const storageKey = getStorageKey(listId, 'categories');
-  logger.debug(COMPONENT_NAME, `Saving ${categories.length} categories to localStorage with key: ${storageKey}`);
+  // logger.debug(`Saving ${categories.length} categories to localStorage with key: ${storageKey}`);
 
   try {
     localStorage.setItem(storageKey, JSON.stringify(categories));
-    logger.info(COMPONENT_NAME, `Successfully saved ${categories.length} categories for list: ${listId}`);
+    // logger.info(`Successfully saved ${categories.length} categories for list: ${listId}`);
     return true;
   } catch (error) {
-    logger.error(COMPONENT_NAME, `Failed to save categories to localStorage for list: ${listId}`, String(error));
+    // logger.error(`Failed to save categories to localStorage for list: ${listId}`, String(error));
+    // Fallback: Log error to console if logger is removed
+    console.error(`Failed to save categories to localStorage for list: ${listId}`, String(error));
     return false;
   }
 };
 
-export default {
+const StorageService = {
   loadTodos,
   saveTodos,
   loadCategories,
   saveCategories
-}; 
+};
+
+export default StorageService; 

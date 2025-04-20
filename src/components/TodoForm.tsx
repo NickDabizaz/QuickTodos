@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { PlusCircle, X, CheckCircleIcon, AlertCircle, Clock, Info } from 'lucide-react'
+import { PlusCircle, X, AlertCircle, Clock, Info } from 'lucide-react'
 
 interface TodoFormProps { 
   addTodo: (text: string, category: string, priority: 'Urgent' | 'Normal' | 'Low Priority') => void 

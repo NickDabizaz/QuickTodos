@@ -57,7 +57,7 @@ export const loadTodos = (listId: string): Todo[] => {
     logger.info(COMPONENT_NAME, `Successfully loaded ${migratedTodos.length} todos for list: ${listId}`);
     return migratedTodos;
   } catch (error) {
-    logger.error(COMPONENT_NAME, `Failed to parse todos from localStorage for list: ${listId}`, error);
+    logger.error(COMPONENT_NAME, `Failed to parse todos from localStorage for list: ${listId}`, String(error));
     return [];
   }
 };
@@ -79,7 +79,7 @@ export const saveTodos = (listId: string, todos: Todo[]): boolean => {
     logger.info(COMPONENT_NAME, `Successfully saved ${todos.length} todos for list: ${listId}`);
     return true;
   } catch (error) {
-    logger.error(COMPONENT_NAME, `Failed to save todos to localStorage for list: ${listId}`, error);
+    logger.error(COMPONENT_NAME, `Failed to save todos to localStorage for list: ${listId}`, String(error));
     return false;
   }
 };
@@ -114,7 +114,7 @@ export const loadCategories = (listId: string): string[] => {
     logger.info(COMPONENT_NAME, `Successfully loaded ${parsedData.length} categories for list: ${listId}`);
     return parsedData;
   } catch (error) {
-    logger.error(COMPONENT_NAME, `Failed to parse categories from localStorage for list: ${listId}`, error);
+    logger.error(COMPONENT_NAME, `Failed to parse categories from localStorage for list: ${listId}`, String(error));
     return ['Not Categorized', 'Coding', 'Design', 'Research', 'Marketing'];
   }
 };
@@ -136,7 +136,7 @@ export const saveCategories = (listId: string, categories: string[]): boolean =>
     logger.info(COMPONENT_NAME, `Successfully saved ${categories.length} categories for list: ${listId}`);
     return true;
   } catch (error) {
-    logger.error(COMPONENT_NAME, `Failed to save categories to localStorage for list: ${listId}`, error);
+    logger.error(COMPONENT_NAME, `Failed to save categories to localStorage for list: ${listId}`, String(error));
     return false;
   }
 };

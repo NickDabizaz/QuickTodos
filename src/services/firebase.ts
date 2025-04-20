@@ -39,7 +39,7 @@ export const createRoom = async (roomId: string): Promise<void> => {
       logger.info(COMPONENT_NAME, `Room already exists: ${roomId}`);
     }
   } catch (error) {
-    logger.error(COMPONENT_NAME, `Error creating room: ${roomId}`, error);
+    logger.error(COMPONENT_NAME, `Error creating room: ${roomId}`, String(error));
     throw error;
   }
 };
@@ -76,7 +76,7 @@ export const getRoom = async (roomId: string): Promise<TodoRoom | null> => {
         : new Date(roomData.lastUpdated)
     };
   } catch (error) {
-    logger.error(COMPONENT_NAME, `Error getting room: ${roomId}`, error);
+    logger.error(COMPONENT_NAME, `Error getting room: ${roomId}`, String(error));
     throw error;
   }
 };
@@ -102,7 +102,7 @@ export const addTodo = async (roomId: string, todo: Omit<Todo, 'id' | 'createdAt
     logger.info(COMPONENT_NAME, `Todo added successfully to room: ${roomId}, with ID: ${todoId}`);
     return todoId;
   } catch (error) {
-    logger.error(COMPONENT_NAME, `Error adding todo to room: ${roomId}`, error);
+    logger.error(COMPONENT_NAME, `Error adding todo to room: ${roomId}`, String(error));
     throw error;
   }
 };
@@ -143,7 +143,7 @@ export const updateTodo = async (roomId: string, updatedTodo: Todo): Promise<voi
     
     logger.info(COMPONENT_NAME, `Todo updated successfully: ${updatedTodo.id} in room: ${roomId}`);
   } catch (error) {
-    logger.error(COMPONENT_NAME, `Error updating todo: ${updatedTodo.id} in room: ${roomId}`, error);
+    logger.error(COMPONENT_NAME, `Error updating todo: ${updatedTodo.id} in room: ${roomId}`, String(error));
     throw error;
   }
 };
@@ -173,7 +173,7 @@ export const deleteTodo = async (roomId: string, todoId: string): Promise<void> 
       logger.warn(COMPONENT_NAME, `Todo not found for deletion: ${todoId} in room: ${roomId}`);
     }
   } catch (error) {
-    logger.error(COMPONENT_NAME, `Error deleting todo: ${todoId} from room: ${roomId}`, error);
+    logger.error(COMPONENT_NAME, `Error deleting todo: ${todoId} from room: ${roomId}`, String(error));
     throw error;
   }
 }; 

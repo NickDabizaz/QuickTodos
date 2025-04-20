@@ -86,7 +86,7 @@ const persistLog = (
     }
   } catch (error) {
     // Sesuatu yang salah dengan localStorage - abaikan
-    console.error('Error persisting logs:', error);
+    console.error('Error persisting logs:', String(error));
   }
 };
 
@@ -135,6 +135,7 @@ const logger = {
       const storedLogs: LogEntry[] = JSON.parse(localStorage.getItem(`${config.storagePrefix}logs`) || '[]');
       return [...storedLogs, ...inMemoryLogs];
     } catch (error) {
+      console.error('Error retrieving logs:', String(error));
       return inMemoryLogs;
     }
   },

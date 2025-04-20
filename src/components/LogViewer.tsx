@@ -45,7 +45,7 @@ const LogViewer: React.FC<LogViewerProps> = ({ isOpen, onClose }) => {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Error downloading logs:', error);
+      console.error('Error downloading logs:', String(error));
     }
   };
 

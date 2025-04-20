@@ -22,9 +22,6 @@ const Footer: React.FC<FooterProps> = ({ showDragHint = true }) => {
         </div>
       )}
       
-      {/* Spacer sebelum footer */}
-      <div className="mt-16"></div>
-      
       {/* Main footer - full width dengan pendekatan yang lebih baik */}
       <footer className="w-full bg-gray-800 text-white py-8 mt-auto">
         <div className="max-w-7xl mx-auto px-6 md:px-10">

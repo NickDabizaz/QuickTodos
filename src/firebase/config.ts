@@ -1,9 +1,9 @@
 'use client';
 
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
-import { getAnalytics, isSupported } from "firebase/analytics";
+import { initializeApp, FirebaseApp } from "firebase/app";
+import { getFirestore, Firestore } from "firebase/firestore";
+import { getAnalytics, isSupported, Analytics } from "firebase/analytics";
 import logger from "../utils/logger";
 
 const COMPONENT_NAME = 'FirebaseConfig';
@@ -20,9 +20,9 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-let app;
-let db;
-let analytics = null;
+let app: FirebaseApp;
+let db: Firestore;
+let analytics: Analytics | null = null;
 
 try {
   logger.debug(COMPONENT_NAME, "Initializing Firebase");
@@ -45,7 +45,7 @@ try {
           logger.debug(COMPONENT_NAME, "Firebase Analytics initialized");
         }
       } catch (error) {
-        logger.warn(COMPONENT_NAME, "Firebase Analytics not supported", error);
+        logger.warn(COMPONENT_NAME, "Firebase Analytics not supported", String(error));
       }
     };
     
@@ -54,7 +54,7 @@ try {
   
   logger.info(COMPONENT_NAME, "Firebase initialized successfully");
 } catch (error) {
-  logger.error(COMPONENT_NAME, "Error initializing Firebase", error);
+  logger.error(COMPONENT_NAME, "Error initializing Firebase", String(error));
 }
 
 export { app, db, analytics }; 

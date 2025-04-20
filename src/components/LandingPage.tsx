@@ -73,7 +73,7 @@ const LandingPage: React.FC = () => {
         setValidationError('Room name can only contain letters, numbers, and dashes. No spaces or special characters allowed.');
       }
     } catch (error) {
-      logger.error(COMPONENT_NAME, 'Error creating room:', error as string);
+      logger.error(COMPONENT_NAME, 'Error creating room:', String(error));
       setHasError(true);
       
       // Display detailed error for permission issues

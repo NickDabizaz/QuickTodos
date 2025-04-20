@@ -8,15 +8,15 @@ import logger from "../utils/logger";
 
 const COMPONENT_NAME = 'FirebaseConfig';
 
-// Your web app's Firebase configuration
+// Your web app's Firebase configuration using environment variables
 const firebaseConfig = {
-  apiKey: "AIzaSyDByKKI8dry-hM7f8uKvxkngdvgYConyiY",
-  authDomain: "quicktodos-17a86.firebaseapp.com",
-  projectId: "quicktodos-17a86",
-  storageBucket: "quicktodos-17a86.firebasestorage.app",
-  messagingSenderId: "694373462418",
-  appId: "1:694373462418:web:4cd79e9606eb4b4dccd14b",
-  measurementId: "G-QKJ8TZZYDE"
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
 };
 
 // Initialize Firebase
@@ -26,6 +26,12 @@ let analytics = null;
 
 try {
   logger.debug(COMPONENT_NAME, "Initializing Firebase");
+  
+  // Check if environment variables are loaded
+  if (!process.env.NEXT_PUBLIC_FIREBASE_API_KEY) {
+    logger.warn(COMPONENT_NAME, "Firebase env variables not found. Make sure .env.local is set up correctly");
+  }
+  
   app = initializeApp(firebaseConfig);
   db = getFirestore(app);
   

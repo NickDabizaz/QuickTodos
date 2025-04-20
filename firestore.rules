@@ -1,0 +1,13 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Allow public read/write access to room documents
+    match /rooms/{roomId} {
+      // Allow read for all users
+      allow read: if true;
+      
+      // Allow write for all users with validations
+      allow create, update, delete: if true;
+    }
+  }
+} 

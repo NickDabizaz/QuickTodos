@@ -2,6 +2,10 @@
 
 Welcome to **QuickTodos**, the next level of task management! Whether you're managing personal to-do lists or collaborating with your team, QuickTodos is designed to make your workflow as simple, fast, and effective as possible. Say goodbye to cumbersome apps and hello to seamless task organization—anytime, anywhere, with anyone!
 
+## 📱 See it in Action
+
+![QuickTodos Screenshot](content/screenshot.png)
+
 ## 🎯 Why QuickTodos?
 
 QuickTodos is more than just a to-do list app. It's the perfect solution for teams and individuals who want to **organize, track, and share tasks effortlessly**. Whether you're working on a group project or keeping your personal tasks in check, QuickTodos gives you full control and flexibility with just a drag-and-drop system!
